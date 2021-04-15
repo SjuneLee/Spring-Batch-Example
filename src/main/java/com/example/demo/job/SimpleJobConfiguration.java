@@ -1,5 +1,7 @@
 package com.example.demo.job;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -18,11 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor // 생성자 DI를 위한 lombok 어노테이션
 @Configuration
 public class SimpleJobConfiguration {
+	
 	@Autowired
     private JobBuilderFactory jobBuilderFactory;
 	@Autowired
     private StepBuilderFactory stepBuilderFactory;
-
+	
+	Logger log = LoggerFactory.getLogger(getClass());
     @Bean
     public Job simpleJob() {
         return jobBuilderFactory.get("simpleJob")
@@ -35,9 +39,12 @@ public class SimpleJobConfiguration {
     public Step simpleStep1(@Value("#{jobParameters[requestDate]}") String requestDate) {
         return stepBuilderFactory.get("simpleStep1")
                 .tasklet((contribution, chunkContext) -> {
-                    //log.info(">>>>> This is Step1");
-                	System.out.println(">>>>> This is Step1");
-                	System.out.printf(">>>>> requestDate = %s \n", requestDate);
+                    log.trace(">>>>> This is Step1 -- trace");
+                    log.debug(">>>>> This is Step1 -- debug");
+                    log.info (">>>>> This is Step1 -- info");
+                    log.warn (">>>>> This is Step1 -- warn");
+                    log.error(">>>>> This is Step1 -- error");
+                    log.info(String.format(">>>>> requestDate = %s \n", requestDate));
                     return RepeatStatus.FINISHED;
                 })
                 .build();

@@ -23,4 +23,6 @@ spring:
       
 logging:
   level:
-    root: INFO
+    root: ERROR #어느정도 로그 수준은 설정 가능. 규모가 커지고 세부설정이 필요하다면 logback.xml
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [%4L] - %m%n"
